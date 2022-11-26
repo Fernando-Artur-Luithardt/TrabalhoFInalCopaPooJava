@@ -15,9 +15,9 @@ import fifa.NationalTeamStats;
 
 public class Brasil implements NationalTeamInfos {
 	private String name;
-	private ArrayList<Jogador> players;
-	private ArrayList<ComissaoTecnica> commission;
-	private ArrayList<Dirigente> leaders;
+	private ArrayList<Jogador> players = new ArrayList<>();
+	private ArrayList<ComissaoTecnica> commission = new ArrayList<>();
+	private ArrayList<Dirigente> leaders = new ArrayList<>();
 	
 	public String getName() {
 		return name;
