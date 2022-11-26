@@ -14,17 +14,14 @@ import fifa.NationalTeamInfos;
 import fifa.NationalTeamStats;
 
 public class Brasil implements NationalTeamInfos {
-	private String name;
+	private String CountryName = "BRASIL";
 	private ArrayList<Jogador> players = new ArrayList<>();
 	private ArrayList<ComissaoTecnica> commission = new ArrayList<>();
 	private ArrayList<Dirigente> leaders = new ArrayList<>();
 	
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
+	//ACHO QUE NÃO TEM SET CountryName
+	public void setCountryName(String CountryName) {
+		this.CountryName = CountryName;
 	}
 
 	public ArrayList<Jogador> getPlayers() {
@@ -96,7 +93,7 @@ public class Brasil implements NationalTeamInfos {
 	}
 	
 	@Override
-	public String getPlayer(int number) {
+	public String getPlayer(int number) { //PODERIA USAR UM TRY CATCH AQUI ?
 
 		for (Jogador jogador : players) {
 			if (jogador.getNumber() == number) {
@@ -116,6 +113,10 @@ public class Brasil implements NationalTeamInfos {
 	
 	@Override
 	public String getPressOfficerContacts() {
+		//ACHO QUE ESTÁ ERRADO,
+		//TEM QUE RETORNAR JSON, E A COMISSÃO TÉCNICA NÃO FAZ SENTIDO, TEM DATA DE ANIVERSÁRIO PQ ??
+		//COMISSÃO TÉCNICA PRECISA SER FORMADA POR PESSOAS, ELA NÃO TEM DATA DE ANIVERSÁRIO ESPECIFICA
+		//TALVEZ CRIAR A CLASS PESSOAS E USAR EXTENDS EM JOGAR E UTILIZAR EM MENBROS DA COMISSÃO TÉCNICA
 		String pressOfficerContacts = "";
 		
 		for (Dirigente dirigente : leaders) {
@@ -127,11 +128,12 @@ public class Brasil implements NationalTeamInfos {
 	
 	@Override
 	public String getCountryName() {
-		return this.name;
+		return this.CountryName;
 	}
 	
 	@Override
 	public Image getFlagImage() {
+		//ARRUMAR CONFORME O PROFESSOR EXPLICAR
 		File bandeira = new File("/Brasil/src/module_brasil/bandeira.jpg");
 		Image imagemBandeira = null;
 		
@@ -148,6 +150,8 @@ public class Brasil implements NationalTeamInfos {
 	
 	@Override
 	public Path getTechnicalCommittee() {
+		//CRIAR UM JSON COM OS MENBROS DA COMIISÃO TÉCNICA E AI CHAMAR ESTÁ ROTA
+		//ANTES CORRIGIR E ADICIONAR MEMBROS A COMISSÃO TÉCNICA
 		Path path = Paths.get("/CopaMundo/src/ComissaoTecnica.java");
 		
 		return path;
@@ -155,6 +159,8 @@ public class Brasil implements NationalTeamInfos {
 
 	@Override
 	public NationalTeamStats getStatsResponsible() {
+		//MÉTODO PARA RETORNAR O OBJETO QUE RESPONDE PELAS 
+		//ESTAT�STICAS DE CONSULTA - INTERFACE NATIONALTEAMSTATS. ???
 		// TODO Auto-generated method stub
 		return null;
 	}
