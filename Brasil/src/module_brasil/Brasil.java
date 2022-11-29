@@ -4,14 +4,17 @@ import java.awt.Image;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
 import fifa.NationalTeamInfos;
 import fifa.NationalTeamStats;
+//ADICIONAR JOGADORES
 
 public class Brasil implements NationalTeamInfos {
 	private String CountryName = "BRASIL";
@@ -19,11 +22,25 @@ public class Brasil implements NationalTeamInfos {
 	private ArrayList<ComissaoTecnica> commission = new ArrayList<>();
 	private ArrayList<Dirigente> leaders = new ArrayList<>();
 	
-	//ACHO QUE NÃO TEM SET CountryName
-	public void setCountryName(String CountryName) {
-		this.CountryName = CountryName;
+	
+	public void geraJogadores(int number, String name, String nickName, double height, double weight, LocalDate birthDate, 
+			String position, String currentClub) {
+		Jogador jogador1 = new Jogador();
+		jogador1.setName(name);
+		jogador1.setNickName(nickName);
+		jogador1.setNumber(number);
+		jogador1.setBirthDate(birthDate);
+		jogador1.setHeight(height);
+		jogador1.setPosition(position);
+		jogador1.setWeight(weight);
+		jogador1.setCurrentClub(currentClub);
+		players.add(jogador1);
 	}
-
+	
+	public void geraComissaoTecnica() {
+		
+	}
+	
 	public ArrayList<Jogador> getPlayers() {
 		return players;
 	}
@@ -93,7 +110,7 @@ public class Brasil implements NationalTeamInfos {
 	}
 	
 	@Override
-	public String getPlayer(int number) { //PODERIA USAR UM TRY CATCH AQUI ?
+	public String getPlayer(int number) {
 
 		for (Jogador jogador : players) {
 			if (jogador.getNumber() == number) {
@@ -108,7 +125,7 @@ public class Brasil implements NationalTeamInfos {
 			}
 		}
 		
-		return "Jogador não encontrado.";
+		return null;
 	}
 	
 	@Override
@@ -133,13 +150,12 @@ public class Brasil implements NationalTeamInfos {
 	
 	@Override
 	public Image getFlagImage() {
-		//ARRUMAR CONFORME O PROFESSOR EXPLICAR
-		File bandeira = new File("/Brasil/src/module_brasil/bandeira.jpg");
+		URL bandeira = Brasil.class.getResource("bandeira.jpg");
 		Image imagemBandeira = null;
 		
 		try {
 			imagemBandeira = ImageIO.read(bandeira);
-			
+			System.out.println(imagemBandeira.toString());
 			return imagemBandeira;
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -150,7 +166,7 @@ public class Brasil implements NationalTeamInfos {
 	
 	@Override
 	public Path getTechnicalCommittee() {
-		//CRIAR UM JSON COM OS MENBROS DA COMIISÃO TÉCNICA E AI CHAMAR ESTÁ ROTA
+		//CRIAR UM JSON COM OS MENBROS DA COMISÃO TÉCNICA E AI CHAMAR ESTÁ ROTA
 		//ANTES CORRIGIR E ADICIONAR MEMBROS A COMISSÃO TÉCNICA
 		Path path = Paths.get("/CopaMundo/src/ComissaoTecnica.java");
 		
@@ -163,5 +179,14 @@ public class Brasil implements NationalTeamInfos {
 		//ESTAT�STICAS DE CONSULTA - INTERFACE NATIONALTEAMSTATS. ???
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public Brasil() {
+		geraJogadores(01,"Alysson", "Ali", 1.93, 90, LocalDate.of(1992, 10, 2), "Goleiro", "Liverpool");//FAZER MAIS 10
+	}
+	
+	
+	public static void main(String[] args) {
+		new Brasil();
 	}
 }
