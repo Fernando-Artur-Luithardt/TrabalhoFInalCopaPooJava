@@ -1,8 +1,6 @@
 package module_brasil;
 
 import java.awt.Image;
-
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
@@ -12,19 +10,23 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
+import com.google.gson.Gson;
+
 import fifa.NationalTeamInfos;
 import fifa.NationalTeamStats;
 //ADICIONAR JOGADORES
 
-public class Brasil implements NationalTeamInfos {
+public class Brasil implements NationalTeamInfos, NationalTeamStats {
 	private String CountryName = "BRASIL";
 	private ArrayList<Jogador> players = new ArrayList<>();
 	private ArrayList<ComissaoTecnica> commission = new ArrayList<>();
 	private ArrayList<Dirigente> leaders = new ArrayList<>();
+	public int vezesChamada = 0;
 	
 	
-	public void geraJogadores(int number, String name, String nickName, double height, double weight, LocalDate birthDate, 
-			String position, String currentClub) {
+	public void geraJogadores(int number, String name, String nickName, double height, double weight, LocalDate birthDate, String position, String currentClub) {
+		
+		
 		Jogador jogador1 = new Jogador();
 		jogador1.setName(name);
 		jogador1.setNickName(nickName);
@@ -37,7 +39,23 @@ public class Brasil implements NationalTeamInfos {
 		players.add(jogador1);
 	}
 	
-	public void geraComissaoTecnica() {
+	public void geraComissaotecnica(String name, String nickName, String function, LocalDate birthDate) {
+		ComissaoTecnica comissao = new ComissaoTecnica();
+		comissao.setBirthDate(birthDate);
+		comissao.setFunction(function);
+		comissao.setName(name);
+		comissao.setNickName(nickName);
+		commission.add(comissao);
+		
+	}
+	
+	public void geraDirigentes() {//FAZER
+		Dirigente dirigente = new Dirigente();
+		dirigente.setEmail(CountryName);
+		dirigente.setName(CountryName);
+		dirigente.setTell1(CountryName);
+		dirigente.setTell2(CountryName);
+		leaders.add(dirigente);
 		
 	}
 	
@@ -72,6 +90,7 @@ public class Brasil implements NationalTeamInfos {
 	
 	@Override
 	public int getOldestPlayer() {
+		vezesChamada++;
 		Jogador jogadorMaisVelho = new Jogador();
 		int idadeMaisVelha = jogadorMaisVelho.getIdade();
 		
@@ -86,8 +105,9 @@ public class Brasil implements NationalTeamInfos {
 	
 	@Override
 	public int getYoungestPlayer() {
+		vezesChamada++;
 		Jogador jogadorMaisNovo = new Jogador();
-		int idadeMaisNova = jogadorMaisNovo.getIdade();
+		int idadeMaisNova = Integer.MAX_VALUE;
 		
 		for (Jogador jogador : players) {
 			if (jogador.getIdade() < idadeMaisNova) {
@@ -100,28 +120,23 @@ public class Brasil implements NationalTeamInfos {
 	
 	@Override
 	public double getAverageAge() {
+		vezesChamada++;
 		int soma = 0;
 		
 		for (Jogador jogador : players) {
 			soma += jogador.getIdade();
 		}
 		
-		return soma / players.size();
+		return (soma / players.size());
 	}
 	
 	@Override
 	public String getPlayer(int number) {
-
+		vezesChamada++;
 		for (Jogador jogador : players) {
 			if (jogador.getNumber() == number) {
-				return "Nome: " + jogador.getName() 
-				+ "\nApelido: " + jogador.getNickName()
-				+ "\nAltura: " + jogador.getHeight()
-				+ "\nPeso: " + jogador.getWeight()
-				+ "\nData de nascimento: " + jogador.getBirthDate()
-				+ "\nIdade: " + jogador.getIdade()
-				+ "\nPosi��o" + jogador.getPosition()
-				+ "\nClube atual: " + jogador.getCurrentClub();
+				jogador.setVezesChamada();
+				return new Gson().toJson(jogador);
 			}
 		}
 		
@@ -130,10 +145,7 @@ public class Brasil implements NationalTeamInfos {
 	
 	@Override
 	public String getPressOfficerContacts() {
-		//ACHO QUE ESTÁ ERRADO,
-		//TEM QUE RETORNAR JSON, E A COMISSÃO TÉCNICA NÃO FAZ SENTIDO, TEM DATA DE ANIVERSÁRIO PQ ??
-		//COMISSÃO TÉCNICA PRECISA SER FORMADA POR PESSOAS, ELA NÃO TEM DATA DE ANIVERSÁRIO ESPECIFICA
-		//TALVEZ CRIAR A CLASS PESSOAS E USAR EXTENDS EM JOGAR E UTILIZAR EM MENBROS DA COMISSÃO TÉCNICA
+		vezesChamada++;
 		String pressOfficerContacts = "";
 		
 		for (Dirigente dirigente : leaders) {
@@ -145,11 +157,13 @@ public class Brasil implements NationalTeamInfos {
 	
 	@Override
 	public String getCountryName() {
+		vezesChamada++;
 		return this.CountryName;
 	}
 	
 	@Override
 	public Image getFlagImage() {
+		vezesChamada++;
 		URL bandeira = Brasil.class.getResource("bandeira.jpg");
 		Image imagemBandeira = null;
 		
@@ -166,25 +180,53 @@ public class Brasil implements NationalTeamInfos {
 	
 	@Override
 	public Path getTechnicalCommittee() {
-		//CRIAR UM JSON COM OS MENBROS DA COMISÃO TÉCNICA E AI CHAMAR ESTÁ ROTA
-		//ANTES CORRIGIR E ADICIONAR MEMBROS A COMISSÃO TÉCNICA
-		Path path = Paths.get("/CopaMundo/src/ComissaoTecnica.java");
+		vezesChamada++;
 		
-		return path;
+		return Paths.get("/Brasil/src/module_brasil/comissao.json");
+		
 	}
 
 	@Override
-	public NationalTeamStats getStatsResponsible() {
-		//MÉTODO PARA RETORNAR O OBJETO QUE RESPONDE PELAS 
-		//ESTAT�STICAS DE CONSULTA - INTERFACE NATIONALTEAMSTATS. ???
-		// TODO Auto-generated method stub
-		return null;
+	public NationalTeamStats getStatsResponsible() {		
+		return this;
 	}
+	
+	
 	
 	public Brasil() {
-		geraJogadores(01,"Alysson", "Ali", 1.93, 90, LocalDate.of(1992, 10, 2), "Goleiro", "Liverpool");//FAZER MAIS 10
+		geraJogadores(01,"Alysson", "Ali", 1.93, 90, LocalDate.of(1992, 10, 2), "Goleiro", "Liverpool");
+		geraJogadores(3, "Thiago Emiliano da Silva", "Thiago Silva", 1.83, 77, LocalDate.of(1984, 9, 22), "Zagueiro", "Chelsea");
+		geraJogadores(4, "Marcos Aoás Corrêa", "Marquinhos", 1.83, 73, LocalDate.of(1994, 05, 14), "Zagueiro", "Paris Saint-Germain");
+		geraJogadores(5, "Carlos Henrique Casimiro", "Casemiro", 1.85, 81, LocalDate.of(1992, 02, 23), "Volante", "Manchester United");
+		geraJogadores(7, "Rodinei Marcelo de Almeida", "Rodinei", 1.75, 78, LocalDate.of(1992, 02, 29), "Lateral-direito", "Flamengo");
+		geraJogadores(8, "Guilherme Antonio Arana Lopes", "Arana", 1.76, 68, LocalDate.of(1997, 14, 04), "Lateral-esquerdo", "Atlético Mineiro");
+		geraJogadores(9, "Richarlison de Andrade", "Richarlison", 1.84, 83, LocalDate.of(1997, 05, 10), "Atacante", "Tottenham");
+		geraJogadores(10, "Neymar da Silva Santos Júnior", "Neymar", 1.75, 68, LocalDate.of(1992, 02, 05), "Atacante", "Paris Saint-Germain");
+		geraJogadores(11, "Vinícius José Paixão de Oliveira Júnior", "Vinícius Júnior", 1.72, 63, LocalDate.of(2000, 2, 24), "Ponta", "Manchester United");
+		geraJogadores(16, "Lucas Paquetá", "Paquetá", 1.80, 72, LocalDate.of(1997, 8, 27), "Meio-campista", "West Ham");
+		geraJogadores(17, "Bruno Guimarães Rodrigues Moura", "Bruno Guimarães", 1.82, 74, LocalDate.of(1997, 11, 16), "Volante", "Newcastle United");
+		
+		geraComissaotecnica("Adenor Leonardo Bachi", "Tite", "Técnico", LocalDate.of(1961, 7, 5));
+		geraComissaotecnica("Oswaldo Giroldo Júnior", "Juninho", "Coordenador", LocalDate.of(1973, 8, 2));
+		geraComissaotecnica("Guilherme Passos", "Guilherme", "Fisioterapeuta", LocalDate.of(1987, 1, 9));
 	}
 	
+	
+	
+	@Override
+	public int getHowManyQuestions() {
+		return vezesChamada;
+	}
+
+	@Override
+	public String getHowManyCallsToPlayer(int number) {
+		for (Jogador jogador : players) {
+			if (jogador.getNumber() == number) {
+				return String.valueOf(jogador.getVezesChamada());
+			}
+		}
+		return null;
+	}
 	
 	public static void main(String[] args) {
 		new Brasil();

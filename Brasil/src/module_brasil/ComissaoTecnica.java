@@ -12,6 +12,7 @@ public class ComissaoTecnica {
 	private String function;
 	private LocalDate birthDate;
 	
+	
 	public String getName() {
 		return name;
 	}
